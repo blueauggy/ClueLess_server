@@ -23,11 +23,21 @@ public class BoardState
   }
   
   /**
-   * Generates the string/json from the current position of the board
-   * TODO: Needs to be finished.
+   * Recieves boardState from Client
    */
-  public String generateBoardState(BoardState state)
+  public String recieveBoardState(BoardState state)
   {
+	  
+	  return null;
+  }
+  /**
+   * Sends board state to client
+   * @return
+   */
+  public String sendBoardState()
+  {
+	  //hook into existing communications
+	  //ArrayList<String> a = generateState();
 	  return null;
   }
   

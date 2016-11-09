@@ -220,7 +220,6 @@ public class Server
   
   /**
    * Passed a BoardState, it updates the appropriate Player classes and their positions on the server
-   * @param state
    */
   public void updatePosition(BoardState state)
   {
@@ -244,6 +243,16 @@ public class Server
 			  }
 		  }
 	  }
+  }
+  
+  public ArrayList<String> generateState()
+  {
+	  ArrayList<String> gameState = new ArrayList<String>();
+	  for (Player p : players)
+	  {
+		  gameState.add(p.getName()+","+p.getRow()+","+p.getColumn());
+	  }
+	  return gameState;
   }
   
 }
