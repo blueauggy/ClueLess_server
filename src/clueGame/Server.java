@@ -16,8 +16,10 @@ import java.util.Scanner;
 public class Server
 {
 
-  public static final String peopleConfigFile = "CluePeople.txt";
-  public static final String weaponConfigFile = "ClueWeapons.txt";
+  public String boardConfigFile; 
+ // public String roomConfigFile = "CR_ClueLegend.txt";
+ // public static final String peopleConfigFile = "CluePeople.txt";
+ // public static final String weaponConfigFile = "ClueWeapons.txt";
   private Map<Character, String> legend = new HashMap<Character, String>();
   private ArrayList<String> peopleNames;
   private ArrayList<String> weaponNames;
@@ -46,6 +48,8 @@ public class Server
     loadConfigFiles();
     pickSolution();
     deal();
+    
+    setUpListener("127.0.1.1", "9999");
   }
   
   /**
@@ -57,6 +61,7 @@ public class Server
     {      
       loadPeopleConfig();
       loadWeaponConfig();
+      loadRoomConfig();
     }
     catch (Exception e)
     {
@@ -82,6 +87,8 @@ public class Server
       this.cards.add(new Card(player.getName(), Card.CardType.PERSON));
       this.peopleNames.add(player.getName());
       
+      //System.out.println("Adding player: "+player.getName());
+      
       this.players.add(player);
     }
     peopleConfig.close();
@@ -89,7 +96,6 @@ public class Server
   
   /**
    * Basic error checking on weapon configurations; loads weapons. 
-   * @throws FileNotFoundException
    */
   public void loadWeaponConfig()
     throws FileNotFoundException
@@ -103,11 +109,51 @@ public class Server
       String line = weaponsConfig.nextLine();
       this.cards.add(new Card(line.trim(), Card.CardType.WEAPON));
       this.weaponNames.add(line.trim());
+      //System.out.println("Adding weapon: "+line.trim());
+
     }
     weaponsConfig.close();
   }
 
-  /** Chooses
+  /**
+   * Loads Rooms and adds the rooms to the current card deck
+   * @throws FileNotFoundException
+   */
+  public void loadRoomConfig() throws FileNotFoundException
+  {
+    InputStream is = getClass().getResourceAsStream("/data/CR_ClueLegend.txt");
+    Scanner roomConfig = new Scanner(is);
+    this.roomNames = new ArrayList<String>();
+    while (roomConfig.hasNextLine())
+    {
+      String line = roomConfig.nextLine();
+      String[] tokens = line.split(",");
+      if (tokens.length != 3)
+      {
+        roomConfig.close();
+        System.err.println("Room file format incorrect " + line);
+      }
+      Character key = new Character(tokens[0].charAt(0));
+      String roomName = tokens[1].trim();
+      this.legend.put(key, roomName);
+      
+      String roomType = tokens[2].trim();
+      if ((!roomType.equals("Card")) && (!roomType.equals("Other")))
+      {
+        roomConfig.close();
+        System.err.println("Room file format incorrect " + line);
+      }
+      if (roomType.equals("Card"))
+      {
+        this.cards.add(new Card(tokens[1].trim(), Card.CardType.ROOM));
+        this.roomNames.add(roomName);
+        //System.out.println("Adding room: "+roomName);
+      }
+    }
+    roomConfig.close();
+  }
+
+  /** 
    *  Chooses the final answer (solution) for the game and stores the variable. 
    *  Should only be known to the server
    */
@@ -128,6 +174,7 @@ public class Server
         this.Solution.weapon = card.getCardName();
       }
     }
+    System.out.println("The solution is: "+this.Solution.person+" - "+this.Solution.weapon+" - "+this.Solution.room);
   }
   
   
@@ -159,6 +206,26 @@ public class Server
         player.addCard(card);
       }
     }
+    
+    //TODO:Remove all below - TESING OUTPUT
+    System.out.println("DEALING.............\n");
+    for (int i=0; i<this.players.size(); i++)
+    {
+    	Player p = this.players.get(i);
+    	System.out.println(p.getName()+"'s Cards:");
+    	for(Card c : p.getCards())
+    	{
+    		System.out.println(c.getCardName());
+    	}
+    	System.out.println("");
+    }
+  }
+  /**
+   * Put code here that establishes the server's connection as a listener on IP:port
+   */
+  public void setUpListener(String IP, String port)
+  {
+	  return;
   }
   
   
