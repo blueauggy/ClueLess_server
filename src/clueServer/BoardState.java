@@ -1,5 +1,6 @@
 package clueServer;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 /**
@@ -23,22 +24,71 @@ public class BoardState
   }
   
   /**
-   * Recieves boardState from Client
+   * Receives boardState from Client
    */
-  public String recieveBoardState(BoardState state)
+  public static void recieveBoardState(String state)
   {
-	  
-	  return null;
+	  Server server = Server.getInstance();
+	  String [] positions = state.split(":")[1].split(";");
+	  for (String pos : positions)
+	  {
+		  String[] parts = pos.split(",");
+		  String name = parts[0];
+		  int row = Integer.parseInt(parts[1]);
+		  int col = Integer.parseInt(parts[2]);
+		  for (Player p :server.players)
+		  {
+			  if(p.getName().equals(name))
+			  {
+				  p.setColumn(col);
+				  p.setRow(row);
+			  }
+		  }
+	  }
   }
   /**
    * Sends board state to client
+   * Boolean initial is whether or not it is the initial board state at the beginning of the game
    * @return
    */
-  public String sendBoardState()
+  public static String sendBoardState(Boolean initial)
   {
-	  //hook into existing communications
-	  //ArrayList<String> a = generateState();
-	  return null;
+	  String output="";
+	  
+	  if (initial)
+	  {
+		  output += "----Start_Board:";
+	  }
+	  else
+	  {
+		  output += "----BoardState:";
+	  }
+	  Server server = Server.getInstance();
+	  for (Player p : server.players)
+	  {
+		  if(initial)
+		  {
+			  output = output + p.getName()+","
+					  +p.getRow()+","
+					  +p.getColumn()+","
+					  +Integer.toString(p.getColor().getRGB())+";";
+		  }
+		  else
+		  {
+			  output = output + p.getName()+","+p.getRow()+","+p.getColumn()+";";
+		  }
+	  }
+	  return output.substring(0, output.length()-1);
+  }
+  
+  public static String sendBoardStateTurn()
+  {
+	return "----BoardState Turn:"+Server.getInstance().getTurnCounter();  
+  }
+  
+  public static String sendBoardStateCurPlayer()
+  {
+	  return "----BoardState CP:"+Server.getInstance().getCurPlayer();
   }
   
   public ArrayList<String> getPersons()

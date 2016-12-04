@@ -17,9 +17,6 @@ public class Server
 {
 
   public String boardConfigFile; 
- // public String roomConfigFile = "CR_ClueLegend.txt";
- // public static final String peopleConfigFile = "CluePeople.txt";
- // public static final String weaponConfigFile = "ClueWeapons.txt";
   private Map<Character, String> legend = new HashMap<Character, String>();
   private ArrayList<String> peopleNames;
   private ArrayList<String> weaponNames;
@@ -29,6 +26,8 @@ public class Server
   private Guess Solution;
   private int turnCounter;
   private static Server theInstance = new Server();
+  private int playerCount;
+  private String curPlayer;
   
  /**
   * 
@@ -43,14 +42,12 @@ public class Server
    * Starts the game, finds your possible neighbors for moves and deals cards.
  * @throws Exception 
    */
-  public void initialize() throws Exception
+  public void initialize()
   {
 	this.turnCounter=0;
     loadConfigFiles();
     pickSolution();
     deal();
-    setUpListener(5555);
-    //setUpListener("127.0.1.1", "9999");
   }
   
   /**
@@ -71,14 +68,15 @@ public class Server
   }
   
   /**
-   * Error checking with people list. Loads people config.
+   * Loads player config with list of players and has populated playerCount for number of players that joined the game
+   * Add players down the list until playerCount=0
    */
   public void loadPeopleConfig() throws FileNotFoundException
   {
     this.peopleNames = new ArrayList<String>();
     InputStream is = getClass().getResourceAsStream("/data/CluePeople.txt");
     Scanner peopleConfig = new Scanner(is);
-    while (peopleConfig.hasNextLine())
+    while (peopleConfig.hasNextLine() && playerCount > 0)
     {
       String line = peopleConfig.nextLine();
       Player player = new Player();
@@ -87,10 +85,9 @@ public class Server
       
       this.cards.add(new Card(player.getName(), Card.CardType.PERSON));
       this.peopleNames.add(player.getName());
-      
-      //System.out.println("Adding player: "+player.getName());
-      
+            
       this.players.add(player);
+      playerCount--;
     }
     peopleConfig.close();
   }
@@ -110,8 +107,6 @@ public class Server
       String line = weaponsConfig.nextLine();
       this.cards.add(new Card(line.trim(), Card.CardType.WEAPON));
       this.weaponNames.add(line.trim());
-      //System.out.println("Adding weapon: "+line.trim());
-
     }
     weaponsConfig.close();
   }
@@ -148,7 +143,6 @@ public class Server
       {
         this.cards.add(new Card(tokens[1].trim(), Card.CardType.ROOM));
         this.roomNames.add(roomName);
-        //System.out.println("Adding room: "+roomName);
       }
     }
     roomConfig.close();
@@ -207,19 +201,6 @@ public class Server
         player.addCard(card);
       }
     }
-    
-    //TODO:Remove all below - TESING OUTPUT
-    System.out.println("DEALING.............\n");
-    for (int i=0; i<this.players.size(); i++)
-    {
-    	Player p = this.players.get(i);
-    	System.out.println(p.getName()+"'s Cards:");
-    	for(Card c : p.getCards())
-    	{
-    		System.out.println(c.getCardName());
-    	}
-    	System.out.println("");
-    }
   }
   /**
    * Put code here that establishes the server's connection as a listener on IP:port
@@ -227,7 +208,7 @@ public class Server
    */
   public void setUpListener(int port) throws Exception
   {
-	  Lobby lob = new Lobby(port);
+	  new Lobby(port);
 	  return;
   }
   
@@ -323,6 +304,31 @@ public class Server
 		  gameState.add(p.getName()+","+p.getRow()+","+p.getColumn());
 	  }
 	  return gameState;
+  }
+  
+  public void setPlayerCount(int count)
+  {
+	  this.playerCount = count;
+  }
+  
+  public void setTurnCounter(int count)
+  {
+	  this.turnCounter = count;
+  }
+  
+  public Integer getTurnCounter()
+  {
+	  return this.turnCounter;
+  }
+  
+  public void setCurPlayer(String player)
+  {
+	  this.curPlayer = player;
+  }
+  
+  public String getCurPlayer()
+  {
+	  return this.curPlayer;
   }
   
 }

@@ -24,6 +24,7 @@ public class ClueServer
   public String roomConfigFile = "CR_ClueLegend.txt";
   private int GUIx = 620;
   private int GUIy = 750;
+  private int PORT = 5555;
   
   public ClueServer(String boardConfig, String roomConfig)
   {
@@ -37,6 +38,7 @@ public class ClueServer
     setUp();
   }
   
+  //
   public void setUp()
   {
     setTitle("Clue Game SERVER");
@@ -45,7 +47,8 @@ public class ClueServer
     //this.server.setConfigFiles(this.boardConfigFile, this.roomConfigFile);
     try
     {
-      this.server.initialize();
+      this.server.setUpListener(PORT);
+      //this.server.initialize();
     }
     catch (Exception e)
     {

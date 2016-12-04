@@ -17,7 +17,6 @@ public class Lobby {
 		System.out.println("Lobby");
 		//TODO: Need to close the Socket
 		try{
-			//final int PORT=5555;
 			ServerSocket SERVER=new ServerSocket(PORT);
 			System.out.println("Waiting for clients...");
 			
@@ -25,7 +24,7 @@ public class Lobby {
 				Socket SOCK= SERVER.accept();
 				ConnectionArray.add(SOCK);
 				
-				System.out.println("Client connected from: "+ SOCK.getInetAddress());
+				//System.out.println("Client connected from: "+ SOCK.getInetAddress());
 				AddUserName(SOCK);
 							
 				Chat_Server_Return CHAT=new Chat_Server_Return(SOCK);
@@ -43,13 +42,13 @@ public class Lobby {
 	public static void AddUserName(Socket sock) throws Exception {
 		Scanner INPUT= new Scanner(sock.getInputStream());
 		String UserName=INPUT.nextLine();
-		System.out.println("Incoming user: "+UserName);
+		//System.out.println("Incoming user: "+UserName);
 		CurrentUsers.add(UserName);
 		
 		for(int i=1; i<= Lobby.ConnectionArray.size();i++){
 			Socket tmp_sock=(Socket) Lobby.ConnectionArray.get(i-1);
 			PrintWriter OUT = new PrintWriter(tmp_sock.getOutputStream());
-			OUT.println("----"+ CurrentUsers);
+			OUT.println("----CurrentUsers:"+ CurrentUsers);
 			OUT.flush();
 		}
 		//INPUT.close();
