@@ -176,11 +176,11 @@ public class Server
   /**
    * Check accusation against final solution. Return false if all three cards don't match.
    */
-  public boolean checkAccusation(Guess guess)
+  public boolean checkAccusation(String person, String weapon, String room)
   {
-    return (guess.person.equalsIgnoreCase(this.Solution.person)) && 
-      (guess.weapon.equalsIgnoreCase(this.Solution.weapon)) && 
-      (guess.room.equalsIgnoreCase(this.Solution.room));
+    return (person.equalsIgnoreCase(this.Solution.person)) && 
+      (weapon.equalsIgnoreCase(this.Solution.weapon)) && 
+      (room.equalsIgnoreCase(this.Solution.room));
   }
   
   /**

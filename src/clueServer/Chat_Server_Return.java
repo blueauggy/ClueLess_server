@@ -112,7 +112,6 @@ public class Chat_Server_Return implements Runnable {
 						}						
 					}
 					//Form PlayerGuess:<Orig Player>:<Guess Player>,<Guess Weapon>,<Guess Room>
-					//TODO: Send result only to person guessing
 					else if(status.startsWith("PlayerGuess:"))
 					{
 						Player accusingPlayer = server.retPlayer(message.split(":")[1]);
@@ -125,10 +124,25 @@ public class Chat_Server_Return implements Runnable {
 							}
 						}
 						PrintWriter pw = new PrintWriter(tmpSock.getOutputStream());
-						pw.println(BoardState.parseGuess(status));
+						pw.println(BoardState.parseGuess(status, false));
 						pw.flush();
 	
 						
+					}
+					//Player Accusation
+					else if(status.startsWith("PlayerAccusation:"))
+					{
+						Player accusingPlayer = server.retPlayer(message.split(":")[1]);
+						String result = BoardState.parseGuess(status, true);						
+						Socket tmpSock=null;
+						for(int i=0; i<server.players.size(); i++)
+						{
+			
+							tmpSock=(Socket)Lobby.ConnectionArray.get(i);
+							PrintWriter pw = new PrintWriter(tmpSock.getOutputStream());
+							pw.println("----Accusation Result:"+accusingPlayer.getName()+":"+result);
+							pw.flush();
+						}
 					}
 				}
 				else

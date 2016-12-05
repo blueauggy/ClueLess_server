@@ -94,7 +94,7 @@ public class BoardState
   /*
    * Form PlayerGuess:<Orig Player>:<Guess Player>,<Guess Weapon>,<Guess Room>
    */
-  public static String parseGuess(String message)
+  public static String parseGuess(String message, Boolean accusation)
   {
 	  Server serv = Server.getInstance();
 	  Player origPlayer = serv.retPlayer(message.split(":")[1]);
@@ -102,9 +102,25 @@ public class BoardState
 	  Card guessPlayer = new Card(guess[0], Card.CardType.PERSON);
 	  Card guestWeapon = new Card (guess[1], Card.CardType.WEAPON);
 	  Card guestRoom = new Card (guess[2], Card.CardType.ROOM);
-	  System.out.println("Recieved Guess ");
 	  
-	  return getGuessAnswer(origPlayer, guessPlayer, guestWeapon, guestRoom);
+	  if(accusation)
+	  {
+		  System.out.println("Recieved Accusation ");
+		  if ( serv.checkAccusation(guessPlayer.getCardName(), guestWeapon.getCardName(), guestRoom.getCardName()) )
+		  {
+			  return "WIN";
+		  }
+		  else
+		  {
+			  return "LOSE";
+		  }
+	  }
+	  else
+	  {
+		  System.out.println("Recieved Guess ");
+		  return getGuessAnswer(origPlayer, guessPlayer, guestWeapon, guestRoom);
+	  }
+	  
   }
   
   public static String getGuessAnswer(Player origPlayer, Card guessPlayer, Card guessWeapon, Card guessRoom)
