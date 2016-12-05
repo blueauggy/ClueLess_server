@@ -261,13 +261,13 @@ public class Server
   /**
    * Returns player class for whoseTurn it is currently
    */
-  public Player getwhoseTurn()
+ /* public Player getwhoseTurn()
   {
 	  int playerNum=0;
 	  playerNum = (this.turnCounter + 1) % this.players.size();
       return (Player)this.players.get(playerNum);
       
-  }
+  }*/
   
   /**
    * Passed a BoardState, it updates the appropriate Player classes and their positions on the server
@@ -329,6 +329,32 @@ public class Server
   public String getCurPlayer()
   {
 	  return this.curPlayer;
+  }
+  
+  public Player retPlayer(String pl)
+  {
+	  for (Player p : players)
+	  {
+		  if (p.getName().equals(pl))
+		  {
+			  return p;
+		  }
+	  }
+	  return null;
+  }
+  
+  public String retNextPlayer(String prevPlayer)
+  {
+	  String nextPlayer="";
+	  for (int i=0; i<players.size(); i++)
+	  {
+		  if (players.get(i).getName().equals(prevPlayer))
+		  {
+			  int index = (i+1) % players.size(); 
+			  nextPlayer = players.get(index).getName();
+		  }
+	  }
+	  return nextPlayer;
   }
   
 }

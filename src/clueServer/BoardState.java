@@ -1,6 +1,5 @@
 package clueServer;
 
-import java.awt.Color;
 import java.util.ArrayList;
 
 /**
@@ -83,12 +82,68 @@ public class BoardState
   
   public static String sendBoardStateTurn()
   {
+	System.out.println("sendBoardStateTurn:" +Server.getInstance().getTurnCounter());
 	return "----BoardState Turn:"+Server.getInstance().getTurnCounter();  
   }
   
   public static String sendBoardStateCurPlayer()
   {
 	  return "----BoardState CP:"+Server.getInstance().getCurPlayer();
+  }
+  
+  /*
+   * Form PlayerGuess:<Orig Player>:<Guess Player>,<Guess Weapon>,<Guess Room>
+   */
+  public static String parseGuess(String message)
+  {
+	  Server serv = Server.getInstance();
+	  Player origPlayer = serv.retPlayer(message.split(":")[1]);
+	  String [] guess = message.split(":")[2].split(",");
+	  Card guessPlayer = new Card(guess[0], Card.CardType.PERSON);
+	  Card guestWeapon = new Card (guess[1], Card.CardType.WEAPON);
+	  Card guestRoom = new Card (guess[2], Card.CardType.ROOM);
+	  System.out.println("Recieved Guess ");
+	  
+	  return getGuessAnswer(origPlayer, guessPlayer, guestWeapon, guestRoom);
+  }
+  
+  public static String getGuessAnswer(Player origPlayer, Card guessPlayer, Card guessWeapon, Card guessRoom)
+  {
+	  Server serv = Server.getInstance();
+	  int index = -1;
+	  for (int i=0; i<serv.players.size(); i++)
+	  {
+		  if (serv.players.get(i).equals(origPlayer))
+		  {
+			  index=i;
+		  }
+	  }
+	  if (index==-1)
+	  {
+		  return "";
+	  }
+	  int playersTried =0;
+	  int numPlayers = serv.players.size();
+	  while(playersTried < numPlayers)
+	  {
+		  if(serv.players.get(index).equals(origPlayer))
+		  {
+			  index = (index+1) % numPlayers;
+			  playersTried = playersTried +1;
+			  continue;
+		  }
+		  ArrayList<Card> plCards = serv.players.get(index).getCards();
+		  for(Card c : plCards)
+		  {
+			  if(c.equals(guessPlayer) || c.equals(guessWeapon) || c.equals(guessRoom))
+			  {
+				  return "----Guess Result:"+c.getCardName();
+			  }
+		  }
+		  index = (index+1) % numPlayers;
+		  playersTried = playersTried +1;
+	  }
+	  return "----Guess Result:NONE";
   }
   
   public ArrayList<String> getPersons()

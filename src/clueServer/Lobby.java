@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.PrintWriter;
 
+@SuppressWarnings("resource")
 public class Lobby {
 
 	public static ArrayList<Socket> ConnectionArray=new ArrayList<Socket>();
@@ -30,7 +31,7 @@ public class Lobby {
 				Chat_Server_Return CHAT=new Chat_Server_Return(SOCK);
 				Thread th =new Thread(CHAT);
 				th.start();
-			}			
+			}
 			
 		} catch (Exception X) {
 			System.out.println(X);

@@ -10,11 +10,10 @@ public class Chat_Server_Return implements Runnable {
 
 	Socket SOCK;
 	private Scanner INPUT;
-	//private PrintWriter OUT;
 	
-	public Chat_Server_Return(Socket X){
+	public Chat_Server_Return(Socket sock){
 		
-		this.SOCK=X;
+		this.SOCK=sock;
 	}
 	
 	public void CheckConnection() throws Exception{
@@ -65,7 +64,6 @@ public class Chat_Server_Return implements Runnable {
 						System.out.println("Current Users:");
 						ArrayList <String> names = server.getPeopleNames();
 						//Send cards to each player
-						//TODO: Close pw??
 						for(int i=0; i<Lobby.ConnectionArray.size(); i++)
 						{					
 							String plName = names.get(i);							
@@ -88,13 +86,13 @@ public class Chat_Server_Return implements Runnable {
 					}
 					else if(status.startsWith("BoardState Turn:"))
 					{
-						String value = status.split(":")[1];
-						server.setTurnCounter(Integer.parseInt(value));
+						String turn = status.split(":")[1];
+						server.setTurnCounter(Integer.parseInt(turn)+1);
 					}
 					else if(status.startsWith("BoardState CP:"))
 					{
-						String value = status.split(":")[1];
-						server.setCurPlayer(value);
+						String lastPl = status.split(":")[1];
+						server.setCurPlayer(server.retNextPlayer(lastPl));
 					}
 					else if(status.startsWith("BoardState:"))
 					{
@@ -112,6 +110,25 @@ public class Chat_Server_Return implements Runnable {
 							pw.println(BoardState.sendBoardState(false));
 							pw.flush();
 						}						
+					}
+					//Form PlayerGuess:<Orig Player>:<Guess Player>,<Guess Weapon>,<Guess Room>
+					//TODO: Send result only to person guessing
+					else if(status.startsWith("PlayerGuess:"))
+					{
+						Player accusingPlayer = server.retPlayer(message.split(":")[1]);
+						Socket tmpSock=null;
+						for(int i=0; i<server.players.size(); i++)
+						{
+							if (server.players.get(i).equals(accusingPlayer))
+							{
+								tmpSock=(Socket)Lobby.ConnectionArray.get(i);
+							}
+						}
+						PrintWriter pw = new PrintWriter(tmpSock.getOutputStream());
+						pw.println(BoardState.parseGuess(status));
+						pw.flush();
+	
+						
 					}
 				}
 				else
