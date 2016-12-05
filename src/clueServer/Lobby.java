@@ -7,6 +7,7 @@ import java.util.Scanner;
 import java.io.PrintWriter;
 
 @SuppressWarnings("resource")
+//TODO: Need to close the Sockets
 public class Lobby {
 
 	public static ArrayList<Socket> ConnectionArray=new ArrayList<Socket>();
@@ -16,7 +17,7 @@ public class Lobby {
 		throws Exception 
 	{
 		System.out.println("Lobby");
-		//TODO: Need to close the Socket
+		
 		try{
 			ServerSocket SERVER=new ServerSocket(PORT);
 			System.out.println("Waiting for clients...");
@@ -25,7 +26,6 @@ public class Lobby {
 				Socket SOCK= SERVER.accept();
 				ConnectionArray.add(SOCK);
 				
-				//System.out.println("Client connected from: "+ SOCK.getInetAddress());
 				AddUserName(SOCK);
 							
 				Chat_Server_Return CHAT=new Chat_Server_Return(SOCK);
@@ -43,7 +43,6 @@ public class Lobby {
 	public static void AddUserName(Socket sock) throws Exception {
 		Scanner INPUT= new Scanner(sock.getInputStream());
 		String UserName=INPUT.nextLine();
-		//System.out.println("Incoming user: "+UserName);
 		CurrentUsers.add(UserName);
 		
 		for(int i=1; i<= Lobby.ConnectionArray.size();i++){
@@ -52,7 +51,6 @@ public class Lobby {
 			OUT.println("----CurrentUsers:"+ CurrentUsers);
 			OUT.flush();
 		}
-		//INPUT.close();
 		System.out.println(UserName + " has joined the game");
 	}
 	

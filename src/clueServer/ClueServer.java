@@ -44,11 +44,9 @@ public class ClueServer
     setTitle("Clue Game SERVER");
     
     this.server = Server.getInstance();
-    //this.server.setConfigFiles(this.boardConfigFile, this.roomConfigFile);
     try
     {
       this.server.setUpListener(PORT);
-      //this.server.initialize();
     }
     catch (Exception e)
     {
@@ -62,7 +60,6 @@ public class ClueServer
   public void setupGUI()
   {
     setDefaultCloseOperation(3);
-    //add(this.server, "Center");
     initMenus();
     setSize(GUIx, GUIy);
   }

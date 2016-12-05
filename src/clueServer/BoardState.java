@@ -9,19 +9,7 @@ import java.util.ArrayList;
  */
 public class BoardState
 {
-  private ArrayList<String> persons;	
-  private ArrayList<Integer> rows;
-  private ArrayList<Integer> columns;
-  
-  /**
-   * Parses the string/json that is passed from client to server and populates the BoardState object
-   * TODO: Needs to be finished.
-   */
-  public BoardState parseBoardState(String input)
-  {
-	  return null;
-  }
-  
+ 
   /**
    * Receives boardState from Client
    */
@@ -161,29 +149,5 @@ public class BoardState
 	  }
 	  return "----Guess Result:NONE";
   }
-  
-  public ArrayList<String> getPersons()
-  {
-	  return this.persons;
-  }
-  
-  public ArrayList<Integer> getRows()
-  {
-	  return this.rows;
-  }
-  
-  public ArrayList<Integer> getCols()
-  {
-	  return this.columns;
-  }
-  
-  public static Boolean validateBoardState(BoardState state)
-  {
-	  if ((state.persons.size() != state.rows.size()) &&  (state.rows.size() != state.columns.size()))
-		  return false;
-	  return true;
-  }
-  
-
   
 }

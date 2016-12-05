@@ -209,7 +209,6 @@ public class Server
   public void setUpListener(int port) throws Exception
   {
 	  new Lobby(port);
-	  return;
   }
   
   
@@ -256,54 +255,6 @@ public class Server
 			return p.getCards();
 	}
 	return null;
-  }
-  
-  /**
-   * Returns player class for whoseTurn it is currently
-   */
- /* public Player getwhoseTurn()
-  {
-	  int playerNum=0;
-	  playerNum = (this.turnCounter + 1) % this.players.size();
-      return (Player)this.players.get(playerNum);
-      
-  }*/
-  
-  /**
-   * Passed a BoardState, it updates the appropriate Player classes and their positions on the server
-   */
-  public void updatePosition(BoardState state)
-  {
-	  if (BoardState.validateBoardState(state))
-	  {
-		  System.err.println("Error updating position from GameState");
-		  return;
-	  }
-	  ArrayList<String> persons = state.getPersons();
-	  ArrayList<Integer> stateRows = state.getRows();
-	  ArrayList<Integer> stateCols = state.getCols();
-	  
-	  for(int i=0; i<persons.size(); i++)
-	  {
-		  for (Player p : players)
-		  {
-			  if (persons.get(i).equals(p.getName()))
-			  {
-				  p.setRow(stateRows.get(i));
-				  p.setColumn(stateCols.get(i));
-			  }
-		  }
-	  }
-  }
-  
-  public ArrayList<String> generateState()
-  {
-	  ArrayList<String> gameState = new ArrayList<String>();
-	  for (Player p : players)
-	  {
-		  gameState.add(p.getName()+","+p.getRow()+","+p.getColumn());
-	  }
-	  return gameState;
   }
   
   public void setPlayerCount(int count)

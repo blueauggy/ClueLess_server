@@ -30,7 +30,6 @@ public class Chat_Server_Return implements Runnable {
 				tmp_out.flush();
 				
 				System.out.println(tmp_sock.getLocalAddress().getHostName() + " is disconnected");
-				
 			}
 		}
 	}
@@ -40,7 +39,6 @@ public class Chat_Server_Return implements Runnable {
 		try
 		{
 			INPUT=new Scanner (SOCK.getInputStream());
-			//PrintWriter OUT=new PrintWriter(SOCK.getOutputStream());
 			
 			while(true)
 			{
@@ -111,6 +109,7 @@ public class Chat_Server_Return implements Runnable {
 							pw.flush();
 						}						
 					}
+					
 					//Form PlayerGuess:<Orig Player>:<Guess Player>,<Guess Weapon>,<Guess Room>
 					else if(status.startsWith("PlayerGuess:"))
 					{
@@ -151,8 +150,8 @@ public class Chat_Server_Return implements Runnable {
 					pushMessage(message);
 				}	
 			} 		
-		} catch (Exception X){
-			System.out.println(X);
+		} catch (Exception ex){
+			System.out.println(ex);
 		}
 		
 	}
