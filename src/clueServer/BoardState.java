@@ -100,6 +100,7 @@ public class BoardState
 		  }
 		  else
 		  {
+			  origPlayer.setIsDead();
 			  return "LOSE";
 		  }
 	  }

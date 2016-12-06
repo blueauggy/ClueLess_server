@@ -14,6 +14,8 @@ public class Player
   private int column;
   private Color color;
   private ArrayList<Card> Cards = new ArrayList<Card>();
+  private boolean isDead= false;
+  private boolean forceMove = false;
   
   public Player() {}
   
@@ -23,6 +25,8 @@ public class Player
     this.row = row;
     this.column = column;
     this.color = color;
+    this.isDead = false;
+    this.forceMove = false;
   }
   
   public void updateAttributes(String line)
@@ -100,5 +104,25 @@ public class Player
   public ArrayList<Card> getCards()
   {
     return this.Cards;
+  }
+  
+  public Boolean getIsDead()
+  {
+    return this.isDead;
+  }
+  
+  public void setIsDead()
+  {
+    this.isDead = true;
+  }
+  
+  public Boolean getForceMove()
+  {
+    return this.forceMove;
+  }
+  
+  public void setForceMove(boolean value)
+  {
+    this.forceMove = value;
   }
 }

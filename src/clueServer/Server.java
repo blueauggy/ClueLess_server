@@ -294,6 +294,9 @@ public class Server
 	  return null;
   }
   
+  /*
+   * Also looks for dead players and skips accordingly
+   */
   public String retNextPlayer(String prevPlayer)
   {
 	  String nextPlayer="";
@@ -301,8 +304,15 @@ public class Server
 	  {
 		  if (players.get(i).getName().equals(prevPlayer))
 		  {
-			  int index = (i+1) % players.size(); 
+			  System.out.println("Names match "+prevPlayer);
+			  int index = (i+1) % players.size();
+			  while(players.get(index).getIsDead())
+			  {
+				   System.out.println("Player "+players.get(index).getName()+" is dead...skipping");
+				   index = (index+1) % players.size();
+			  }
 			  nextPlayer = players.get(index).getName();
+			  break;
 		  }
 	  }
 	  return nextPlayer;

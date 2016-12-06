@@ -92,6 +92,19 @@ public class Chat_Server_Return implements Runnable {
 						String lastPl = status.split(":")[1];
 						server.setCurPlayer(server.retNextPlayer(lastPl));
 					}
+					/*else if(status.startsWith("BoardState FM:"))
+					{
+						String value = status.split(":")[1];
+						if (!value.equals("NONE"))
+						{
+							String[] forceMovePlayers = value.split(",");
+							for (Player p : server.players)
+							{
+								p.set
+							}
+						}
+						server.setCurPlayer(server.retNextPlayer(lastPl));
+					}*/
 					else if(status.startsWith("BoardState:"))
 					{
 						BoardState.recieveBoardState(status);
